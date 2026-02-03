@@ -11,7 +11,7 @@ if "GOOGLE_API_KEY" not in st.secrets:
 try:
     genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
     # Updating to Gemini 3 Flash
-    model = genai.GenerativeModel('gemini-2.0-flash')
+    model = genai.GenerativeModel('gemini-3-flash-preview')
 except Exception as e:
     st.error(f"Failed to initialize Gemini: {e}")
     st.stop()
@@ -78,4 +78,5 @@ if st.button("Improve My Resume"):
                     st.error(f"AI Generation Error: {e}")
     else:
         st.warning("Please upload a resume and paste a job description!")
+
 
