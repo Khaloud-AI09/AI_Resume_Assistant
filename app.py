@@ -11,7 +11,7 @@ if "GOOGLE_API_KEY" not in st.secrets:
 try:
     genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
     # Updating to Gemini 3 Flash
-    model = genai.GenerativeModel('gemini-3-flash')
+    model = genai.GenerativeModel('gemini-2.0-flash')
 except Exception as e:
     st.error(f"Failed to initialize Gemini: {e}")
     st.stop()
@@ -46,8 +46,8 @@ def generate_analysis(prompt):
                 raise e
 
 # --- Streamlit UI ---
-st.set_page_config(page_title="Gemini 3 Resume Assistant", page_icon="🚀")
-st.title("🚀 Gemini 3 Resume Assistant")
+st.set_page_config(page_title="Gemini 3 Resume Assistant", page_icon="😁")
+st.title("GenAI Resume Assistant")
 
 uploaded_file = st.file_uploader("Upload your Resume (PDF)", type="pdf")
 job_description = st.text_area("Paste the Job Description here:", height=200)
@@ -78,3 +78,4 @@ if st.button("Improve My Resume"):
                     st.error(f"AI Generation Error: {e}")
     else:
         st.warning("Please upload a resume and paste a job description!")
+
