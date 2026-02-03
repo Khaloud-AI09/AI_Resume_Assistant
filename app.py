@@ -11,7 +11,7 @@ try:
     genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
     # 2026 Stable Model Choice: gemini-1.5-flash
     # If this 404s, 'gemini-pro' is the safest fallback.
-    model = genai.GenerativeModel('gemini-1.5-flash')
+   model = genai.GenerativeModel('gemini-2.5-pro')
 except Exception as e:
     st.error(f"Failed to initialize Gemini: {e}")
     st.stop()
@@ -64,3 +64,4 @@ if st.button("Improve My Resume"):
                     st.error(f"AI Generation Error: {e}")
     else:
         st.warning("Please provide both a resume and a job description.")
+
