@@ -7,7 +7,7 @@ try:
     api_key = st.secrets["GOOGLE_API_KEY"]
     genai.configure(api_key=api_key)
     # Using 'gemini-pro' for maximum compatibility
-    model = genai.GenerativeModel('gemini-pro')
+    model = gemini-1.5-flash-latest
 except Exception as e:
     st.error("API Key not found. Please set GOOGLE_API_KEY in your secrets.")
     st.stop()
@@ -58,3 +58,4 @@ if st.button("Improve My Resume"):
                 st.error(f"An error occurred: {e}")
     else:
         st.warning("Please upload a resume and provide a job description.")
+
