@@ -1,6 +1,7 @@
 import streamlit as st
 import google.generativeai as genai
 from pypdf import PdfReader
+import time
 
 # 1. Setup API Key with extra safety
 if "GOOGLE_API_KEY" not in st.secrets:
@@ -9,9 +10,8 @@ if "GOOGLE_API_KEY" not in st.secrets:
 
 try:
     genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-    # 2026 Stable Model Choice: gemini-1.5-flash
-    # If this 404s, 'gemini-pro' is the safest fallback.
-    model = genai.GenerativeModel('gemini-2.0-flash')
+    # Updating to Gemini 3 Flash
+    model = genai.GenerativeModel('gemini-3-flash')
 except Exception as e:
     st.error(f"Failed to initialize Gemini: {e}")
     st.stop()
@@ -30,17 +30,31 @@ def extract_text_from_pdf(file):
         st.error(f"Error reading PDF: {e}")
         return None
 
+# 3. AI Generation with Rate-Limit Handling
+def generate_analysis(prompt):
+    max_retries = 3
+    for i in range(max_retries):
+        try:
+            response = model.generate_content(prompt)
+            return response.text
+        except Exception as e:
+            if "429" in str(e) and i < max_retries - 1:
+                st.warning(f"Quota hit! Retrying in {5 * (i+1)} seconds...")
+                time.sleep(5 * (i+1)) # Exponential backoff
+                continue
+            else:
+                raise e
+
 # --- Streamlit UI ---
-st.set_page_config(page_title="AI Resume Assistant", page_icon="📄")
-st.title("📄 GenAI Resume Assistant")
+st.set_page_config(page_title="Gemini 3 Resume Assistant", page_icon="🚀")
+st.title("🚀 Gemini 3 Resume Assistant")
 
 uploaded_file = st.file_uploader("Upload your Resume (PDF)", type="pdf")
-# Standardized variable name to match the prompt
 job_description = st.text_area("Paste the Job Description here:", height=200)
 
 if st.button("Improve My Resume"):
     if uploaded_file and job_description:
-        with st.spinner("Analyzing with Gemini..."):
+        with st.spinner("Gemini 3 is analyzing..."):
             resume_text = extract_text_from_pdf(uploaded_file)
             
             if resume_text:
@@ -56,15 +70,11 @@ if st.button("Improve My Resume"):
                 """
                 
                 try:
-                    response = model.generate_content(prompt)
+                    result = generate_analysis(prompt)
                     st.success("Analysis Complete!")
                     st.markdown("### AI Suggestions:")
-                    st.write(response.text)
+                    st.write(result)
                 except Exception as e:
                     st.error(f"AI Generation Error: {e}")
     else:
-        st.warning("Please provide both a resume and a job description.")
-
-
-
-
+        st.warning("Please upload a resume and paste a job description!")
