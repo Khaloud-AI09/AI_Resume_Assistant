@@ -22,8 +22,8 @@ def extract_text_from_pdf(file):
     return text
 
 # --- Streamlit UI ---
-st.set_page_config(page_title="GenAI Resume Assistant", page_icon="📄")
-st.title("📄 GenAI Resume Assistant")
+st.set_page_config(page_title="GenAI Resume Assistant", page_icon="😎")
+st.title("GenAI Resume Assistant")
 st.write("Hey There! I'll help you tailor your resume to any job!")
 
 # Input Section
@@ -60,4 +60,5 @@ if st.button("Improve My Resume"):
             except Exception as e:
                 st.error(f"An error occurred: {e}")
     else:
+
         st.warning("Please upload a resume and provide a job description.")
